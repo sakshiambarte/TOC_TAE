@@ -6,9 +6,9 @@
 <title>Moore to Mealy Converter</title>
 </head>
 <body>
-<header class="topbar"><div class="brand"><div class="brand-icon">M↔</div><div><div class="eyebrow">THEORY OF COMPUTATION</div><h1>Moore to Mealy Converter</h1></div></div><nav><a href="#input">Input</a><a href="#moore-table">Moore</a><a href="#convert">Convert</a><a href="#mealy-table">Mealy</a></nav></header>
+<header class="topbar"><div class="brand"><div class="brand-icon">M↔</div><div><div class="eyebrow">THEORY OF COMPUTATION</div><h1>Moore to Mealy Converter</h1></div></div><nav><a href="#input">Input</a><a href="#moore-table">Moore</a><a href="#convert">Convert</a><a href="#mealy-table">Mealy</a><button id="installBtn" class="install hidden">⬇ Install App</button></nav></header>
 <main>
-<section class="hero"><div><span class="pill">FINITE AUTOMATA TOOL</span><h2>Moore Machine <span>→</span> Mealy Machine</h2><p>Enter a Moore machine and follow the complete conversion flow from input to tables and diagrams.</p></div><div class="hero-card"><div><b>Moore</b><small>Output on states</small></div><strong>→</strong><div><b>Mealy</b><small>Output on transitions</small></div></div></section>
+<section class="hero"><div><span class="pill">FINITE AUTOMATA TOOL</span><h2>Moore Machine <span>→</span> Mealy Machine</h2><p>Enter a Moore machine and follow the complete conversion flow from input to tables and diagrams.</p></div><div class="hero-card"><div><b>Moore</b><small>Output on states</small></div><strong>→</strong><div><b>Mealy</b><small>Output on transitions</small></div></div><div class="install-hint">💡 After deployment on HTTPS, Chrome may show <b>Install App</b> in the address bar or browser menu.</div></section>
 
 <div class="flow"><div class="flow-item active"><span>1</span><b>MOORE INPUT</b></div><i>→</i><div class="flow-item"><span>2</span><b>MOORE TABLE</b></div><i>→</i><div class="flow-item"><span>3</span><b>MOORE DIAGRAM</b></div><i>→</i><div class="flow-item convert-flow"><span>4</span><b>CONVERT</b></div><i>→</i><div class="flow-item"><span>5</span><b>MEALY TABLE</b></div><i>→</i><div class="flow-item"><span>6</span><b>MEALY DIAGRAM</b></div></div>
 
@@ -35,4 +35,24 @@ q2,1,q1</textarea></label>
 <section class="card theory"><div class="section-head"><div><h3>Conversion Rule</h3></div></div><div class="theory-grid"><div><h4>Moore</h4><p>Output depends only on the current state.</p></div><div><h4>Mealy</h4><p>Output is placed on transitions and depends on state + input.</p></div><div><h4>Rule</h4><p>If <b>A -- x → B</b> and B has output <b>y</b>, then Mealy transition is <b>A -- x/y → B</b>.</p></div></div></section>
 </main><footer>Moore to Mealy Converter • Theory of Computation • Educational Tool</footer>
 <script src="script.js"></script>
+<script>
+let deferredInstallPrompt = null;
+const installBtn = document.getElementById('installBtn');
+window.addEventListener('beforeinstallprompt', (event) => {
+  event.preventDefault();
+  deferredInstallPrompt = event;
+  installBtn.classList.remove('hidden');
+});
+installBtn.addEventListener('click', async () => {
+  if (!deferredInstallPrompt) return;
+  deferredInstallPrompt.prompt();
+  await deferredInstallPrompt.userChoice;
+  deferredInstallPrompt = null;
+  installBtn.classList.add('hidden');
+});
+window.addEventListener('appinstalled', () => installBtn.classList.add('hidden'));
+if ('serviceWorker' in navigator) {
+  window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(console.error));
+}
+</script>
 </body></html>
